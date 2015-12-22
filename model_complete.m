@@ -3,9 +3,9 @@ function dP = model_complete(P)
     % geni so shranjeni v globalni spremenljivki
     G = getGlobalx;
 
-	% m ... stevilo genov v enacbi    
-	m = size(G, 1);
-	dP = zeros(1, size(P, 1));
+    % m ... stevilo genov v enacbi
+    m = size(G, 1);
+    dP = zeros(1, size(P, 1));
 
     %%%%%%%%%%%%%%%%%%%%%%%%
     %%%% STRUKTURA GENA %%%%
@@ -14,17 +14,17 @@ function dP = model_complete(P)
     %             (0 = gensko, 1 = linearna mod., 2 = encimska mod)
     % G(i,2)  ... parameter alfa/beta
     % G(i,3)  ... indeks prvega proteina (P2 pri modifikaciji)
-	% G(i,4)  ... mejna koncentracija prvega proteina (P2 pri modifikaciji)
-	% G(i,5)  ... indeks drugega proteina
-	% G(i,6)  ... mejna koncentracija drugega proteina
-	% G(i,7)  ... nacin degradacije
+    % G(i,4)  ... mejna koncentracija prvega proteina (P2 pri modifikaciji)
+    % G(i,5)  ... indeks drugega proteina
+    % G(i,6)  ... mejna koncentracija drugega proteina
+    % G(i,7)  ... nacin degradacije
     %             (0 = linearna, 1 = encimska, 2 = aktivna)
-	% G(i,8)  ... parameter delta
+    % G(i,8)  ... parameter delta
     % TODO: 9 in 10 lahko zdruzimo.
-	% G(i,9)  ... koncentracija, pri kateri je razgradnja polovicna
-	% G(i,10) ... indeks drugega proteina
-    
-    for i = 1 : m 
+    % G(i,9)  ... koncentracija, pri kateri je razgradnja polovicna
+    % G(i,10) ... indeks drugega proteina
+
+    for i = 1 : m
         if G(i, 1) == 0 % gensko izrazanje
             tf1 = 1;
             tf2 = 1;
@@ -60,6 +60,6 @@ function dP = model_complete(P)
             dP(i) = dP(i) - G(i, 8) * P(i) * P(G(i, 10));
         end
     end
-    
-	dP = dP';
+
+    dP = dP';
 end
