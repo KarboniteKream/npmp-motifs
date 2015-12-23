@@ -135,10 +135,12 @@ function NG = mutation(G, pd, po, pg, plm, dl, de)
                 G(sel, 5) = randsample(setdiff(1 : sP, abs(G(sel, 3))), 1);
                 G(sel, 6) = 1;
             end
-        elseif(res > 0.70 && G(sel, 3) ~= 0) % brisanje prvega regulatorja
-            G(sel, 3) = 0;
-        elseif(res > 0.70 && G(sel, 5) ~= 0) % brisanje drugega regulatorja
-            G(sel, 5) = 0;
+        elseif(res > 0.70 && (G(sel, 3) ~= 0 || G(sel, 5) ~= 0)) % brisanje regulatorja
+            if(rand() > 0.5 && G(sel, 3) ~= 0)
+                G(sel, 3) = 0;
+            else
+                G(sel, 5) = 0;
+            end
         elseif(G(sel, 3) ~= 0) % spreminjanje vrste prvega regulatorja
             G(sel, 3) = -G(sel, 3);
         else % spreminjanje vrste drugega regulatorja
