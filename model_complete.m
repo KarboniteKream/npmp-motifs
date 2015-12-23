@@ -1,6 +1,5 @@
 % dP ... diferencial proteinov
-function dP = model_complete(P)
-    % geni so shranjeni v globalni spremenljivki
+function dP = model_complete(t, P)
     G = getGlobalx;
 
     % m ... stevilo genov v enacbi
@@ -20,7 +19,6 @@ function dP = model_complete(P)
     % G(i,7)  ... nacin degradacije
     %             (0 = linearna, 1 = encimska, 2 = aktivna)
     % G(i,8)  ... parameter delta
-    % TODO: 9 in 10 lahko zdruzimo.
     % G(i,9)  ... koncentracija, pri kateri je razgradnja polovicna
     % G(i,10) ... indeks drugega proteina
 
