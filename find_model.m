@@ -3,8 +3,6 @@ function find_model
     max_iterations = 1000;
     % population size
     pop_size = 20;
-    % simualtion time
-    sim_t = 1000;
     % stevilo ucnih signalov
     signal_number = 10;
     
@@ -59,7 +57,7 @@ function find_model
                 %nastavi periodo in amplitudo
                 setGlobalAP(S(j,:)); %AP as amplitude and period 
                 %initial protein values are zeros by default
-                [~, y] = ode15s(@model_complete, [0, sim_t], zeros(1, size(pop_array{i},1)));
+                [~, y] = ode15s(@model_complete, 0 : 0.01 : 9.99, zeros(1, size(pop_array{i},1)));
                 %  S(j,1)*ones(1,size(y,1)) create constant vector of length y
                 C(1, i) = C(1, i) + cost(y(:, 2), S(j,1)*ones(size(y,1),1)) + cost(y(:, 3), S(j,2)*ones(size(y,1),1)); %pristej napako trenutni napaki
             end
@@ -67,7 +65,9 @@ function find_model
 
         % select best
         [~, sort_idx] = sort(C);
-        pop_array{1 : pop_size} = pop_array{sort_idx(1 : pop_size)};
+        for i = 1 : pop_size
+            pop_array{i} = pop_array{sort_idx(i)};
+        end
     end
 
     % select best motif
