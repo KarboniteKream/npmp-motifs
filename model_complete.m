@@ -1,7 +1,6 @@
 % dP ... diferencial proteinov
 function dP = model_complete(t, P)
     G = getGlobalx;
-
     % m ... stevilo genov v enacbi
     m = size(G, 1);
     dP = zeros(1, size(P, 1));
