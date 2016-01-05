@@ -1,6 +1,10 @@
 % dP ... diferencial proteinov
 function dP = model_complete(t, P)
     G = getGlobalx;
+    %parameters
+    Par = getGlobalAP;
+    P(1) = Par(1)*sin((t*2*pi)/Par(2)); %assign number of first protein
+    
     % m ... stevilo genov v enacbi
     m = size(G, 1);
     dP = zeros(1, size(P, 1));

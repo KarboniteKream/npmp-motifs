@@ -27,6 +27,7 @@ function repressilator()
 
     figure(1)
     [T, P1] = ode15s(@model_complete, [0, t - dt], P);
+    P1
     plot(T, P1)
     xlabel('Time')
     ylabel('Protein concentration')

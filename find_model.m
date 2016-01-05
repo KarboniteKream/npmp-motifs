@@ -3,12 +3,15 @@ function find_model
     max_iterations = 1000;
     % population size
     pop_size = 20;
+    % simualtion time
+    sim_t = 1000;
+    % stevilo ucnih signalov
+    signal_number = 10;
     
     % create initial population
     % creates cell array of empty matrices
     pop_array = cell(1, pop_size * 2); %cell array
     % protein concentrations
-    p_con = cell(1, pop_size * 2);
     for i = 1 : pop_size
         % zacetno stevilo proteinov
         M = ones(3,10);
@@ -17,19 +20,17 @@ function find_model
         M(:, 6) = 0;
         M(:, 7) = 0; % spremeni tip degradacije na linearno alfa = 1
         pop_array{i} = M;
-        
-        p_con{i} = zeros(1, 3);
-        % TODO: Zacetne vrednosti.
     end
     
     % create learning examples
+    S = zeros(signal_number,2);
+    for i = 1:signal_number
+        S(i,1) = randsample(1 : 100, 1); %predstavlja amplitudo
+        S(i,2) = randsample(1 : 100, 1); %predstavlja perido
+    end    
     % TODO: Dodaj vhodni signal v osebke kot prvi protein.
-    t = 0 : 0.01 : 9.99;
-    f = 10;
-    x = sin(f * t);
-    y_ampl = mean(x) * ones(size(x));
-    y_per = ((2 * pi) / f) * ones(size(x));
-
+    
+    
     % set other parameters (mutation probabilities)
     ppar = 0;
     pd = 0;
@@ -42,11 +43,10 @@ function find_model
     dl = 0;
     de = 0;
 
-    % cost posameznih osebkov
-    C = zeros(1, pop_size * 2);
-
     % glavna zanka
     for iter = 1 : max_iterations
+        % cost posameznih osebkov se ponastavi pri vsaki iteraciji
+        C = zeros(1, pop_size * 2);
         % mutacija - dodamo 20 novih osebkov
         for i = 1 : pop_size
             pop_array{20 + i} = mutation(pop_array{i}, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de);
@@ -55,8 +55,14 @@ function find_model
         % simulacija
         for i = 1 : (pop_size * 2)
             setGlobalx(pop_array{i});
-            [~, y] = ode15s(@model_complete, [0, 10 - 0.01], p_con{i});
-            C(1, i) = cost(y(:, 2), y_ampl) + cost(y(:, 3), y_per);
+            for j = 1:signal_number 
+                %nastavi periodo in amplitudo
+                setGlobalAP(S(j,:)); %AP as amplitude and period 
+                %initial protein values are zeros by default
+                [~, y] = ode15s(@model_complete, [0, sim_t], zeros(1, size(pop_array{i},1)));
+                %  S(j,1)*ones(1,size(y,1)) create constant vector of length y
+                C(1, i) = C(1, i) + cost(y(:, 2), S(j,1)*ones(size(y,1),1)) + cost(y(:, 3), S(j,2)*ones(size(y,1),1)); %pristej napako trenutni napaki
+            end
         end
 
         % select best
