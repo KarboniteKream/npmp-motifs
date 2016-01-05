@@ -24,7 +24,7 @@ function find_model
     
     % create learning examples
     % sinus s frekvenco 10 Hz s 1000 vzorci.
-    x = sin(10 * 0 : 0.01 : 9.99);
+    x = sin(10 * (0 : 0.01 : 9.99));
     y_ampl = zeros(size(x));
     for i = 1 : size(y_ampl, 2)
         for j = 1 : i
