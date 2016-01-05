@@ -21,7 +21,16 @@ function find_model
     end     
     
     % create learning examples
-        %TO DO
+    % sinus s frekvenco 10 Hz s 1000 vzorci.
+    x = sin(10 * 0 : 0.01 : 9.99);
+    y_ampl = zeros(size(x));
+    for i = 1 : size(y_ampl, 2)
+        for j = 1 : i
+            y_ampl(1, i) = y_ampl(1, i) + x(j);
+        end
+        y_ampl(1, i) = y_ampl(1, i) / i;
+    end
+    y_per = 0; % TODO
 
     % set other parameters (mutation probabilities)
 
