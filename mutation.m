@@ -1,4 +1,4 @@
-function NG = mutation(G, ppar, pd, pdeg, pgen, preg ,po, pg, plm, dl, de)
+function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
     % G   ... gensko regulatorno omrezje
     % pd  ... verjetnost dodajanja proteina
     % po  ... verjetnost odstranitve proteina
