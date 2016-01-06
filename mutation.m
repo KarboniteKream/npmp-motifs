@@ -1,13 +1,13 @@
 function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
-    % G   ... gensko regulatorno omrezje
-    % pd  ... verjetnost dodajanja proteina
-    % po  ... verjetnost odstranitve proteina
-    % pg  ... verjetnost genskega izrazanja
-    % plm ... verjetnost linearne modifikacije
-    % dl  ... verjetnost linearne degradacije
-    % de  ... verjetnost encimske degradacije
-    % ppar  ... verjetnost spremembe parametrov
-    % pdeg  ... verjetnost spremembe degradacije
+    % G    ... gensko regulatorno omrezje
+    % pd   ... verjetnost dodajanja proteina
+    % po   ... verjetnost odstranitve proteina
+    % pg   ... verjetnost genskega izrazanja
+    % plm  ... verjetnost linearne modifikacije
+    % dl   ... verjetnost linearne degradacije
+    % de   ... verjetnost encimske degradacije
+    % ppar ... verjetnost spremembe parametrov
+    % pdeg ... verjetnost spremembe degradacije
     % pgen ... verjetnost spremembe generiranja proteina
     % preg ... verjetnost spremembe regulatorjev
 
@@ -72,6 +72,7 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
         end
 
         G = [G; P];
+        sP = sP + 1;
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -105,7 +106,7 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
             G(sel, 1) = 0;
 
             if(rand() > 0.5) % prvi transkripcijski faktor
-                G(sel, 3) = randsample(1 : sP, 1);
+                G(sel, 3) = randsample(setdiff(1 : sP, abs(G(sel, 5))), 1);
                 G(sel, 4) = 1;
                 if(rand() < 0.5)
                     G(sel, 3) = -G(sel, 3);
@@ -122,10 +123,12 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
         elseif(res < pg + plm) % linearna modifikacija
             G(sel, 1) = 1;
             G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
+            G(sel, 5) = 0;
         else % encimska modifikacija
             G(sel, 1) = 2;
             G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
             G(sel, 4) = 1;
+            G(sel, 5) = 0;
         end
     end
 
@@ -176,7 +179,7 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
             if(G(i, 1) == 0)
                 if(abs(G(i, 3)) == sel)
                     G(i, 3) = randsample(setdiff(1 : sP, abs(G(i, 5))), 1);
-                    if(G(i, 1) == 0 && rand() > 0.5)
+                    if(rand() > 0.5)
                         G(i, 3) = -G(i, 3);
                     end
                 end
@@ -187,12 +190,31 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
                         G(i, 5) = -G(i, 5);
                     end
                 end
-            elseif(G(i, 3) == sel)
-                G(i, 3) = randsample(setdiff(1 : sP, i), 1);
+            else
+                if(abs(G(i, 3)) == sel)
+                    G(i, 3) = randsample(setdiff(1 : sP, i), 1);
+                end
+                G(i, 5) = 0;
             end
 
             if(abs(G(i, 10)) == sel)
                 G(i, 10) = randsample(setdiff(1 : sP, i), 1);
+            end
+
+            if(G(i, 3) > sel)
+                G(i, 3) = G(i, 3) - 1;
+            elseif(abs(G(i, 3)) > sel)
+                G(i, 3) = G(i, 3) + 1;
+            end
+
+            if(G(i, 5) > sel)
+                G(i, 5) = G(i, 5) - 1;
+            elseif(abs(G(i, 5)) > sel)
+                G(i, 5) = G(i, 5) + 1;
+            end
+
+            if(G(i, 10) > sel)
+                G(i, 10) = G(i, 10) - 1;
             end
         end
     end
