@@ -6,22 +6,22 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
     % plm ... verjetnost linearne modifikacije
     % dl  ... verjetnost linearne degradacije
     % de  ... verjetnost encimske degradacije
-	% ppar  ... verjetnost spremembe parametrov
-	% pdeg  ... verjetnost spremembe degradacije
-	% pgen ... verjetnost spremembe generiranja proteina
-	% preg ... verjetnost spremembe regulatorjev 
-	
+    % ppar  ... verjetnost spremembe parametrov
+    % pdeg  ... verjetnost spremembe degradacije
+    % pgen ... verjetnost spremembe generiranja proteina
+    % preg ... verjetnost spremembe regulatorjev
+
     sP = size(G, 1); % stevilo proteinov
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % sprememba obstojecega parametra %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	if (rand() <= ppar)
+    if (rand() <= ppar)
         sel = ceil(rand() * (sP - 1) + 1); % ne mutiramo prvega gena
         params = [2, 4, 6, 8, 9];
         idx = params(ceil(rand() * length(params)));
         G(sel, idx) = G(sel, idx) * (rand() * 2);
-	end
+    end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % dodajanje novega proteina %
@@ -77,62 +77,62 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % spreminjanje nacina degradacije %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	if(rand() <= pdeg)
-		sel = ceil(rand() * (sP - 1) + 1);
-		G(sel, 8) = 1;
+    if(rand() <= pdeg)
+        sel = ceil(rand() * (sP - 1) + 1);
+        G(sel, 8) = 1;
 
-		res = rand();
-		if(res < dl) % linearna degradacija
-			G(sel, 7) = 0;
-		elseif(res < dl + de) % encimska degradacija
-			G(sel, 7) = 1;
-			G(sel, 9) = 1;
-		else % aktivna degradacija
-			G(sel, 7) = 2;
-			G(sel, 10) = randsample(setdiff(1 : sP, sel), 1);
-		end
-	end
+        res = rand();
+        if(res < dl) % linearna degradacija
+            G(sel, 7) = 0;
+        elseif(res < dl + de) % encimska degradacija
+            G(sel, 7) = 1;
+            G(sel, 9) = 1;
+        else % aktivna degradacija
+            G(sel, 7) = 2;
+            G(sel, 10) = randsample(setdiff(1 : sP, sel), 1);
+        end
+    end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % spreminjanje nacina generiranja proteina %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	if(rand() <= pgen)
-		sel = ceil(rand() * (sP - 1) + 1);
-		G(sel, 2) = 1;
+    if(rand() <= pgen)
+        sel = ceil(rand() * (sP - 1) + 1);
+        G(sel, 2) = 1;
 
-		res = rand();
-		if(res < pg) % gensko izrazanje
-			G(sel, 1) = 0;
+        res = rand();
+        if(res < pg) % gensko izrazanje
+            G(sel, 1) = 0;
 
-			if(rand() > 0.5) % prvi transkripcijski faktor
-				G(sel, 3) = randsample(1 : sP, 1);
-				G(sel, 4) = 1;
-				if(rand() < 0.5)
-					G(sel, 3) = -G(sel, 3);
-				end
-			end
+            if(rand() > 0.5) % prvi transkripcijski faktor
+                G(sel, 3) = randsample(1 : sP, 1);
+                G(sel, 4) = 1;
+                if(rand() < 0.5)
+                    G(sel, 3) = -G(sel, 3);
+                end
+            end
 
-			if(rand() > 0.5) % drugi transkripcijski faktor
-				G(sel, 5) = randsample(setdiff(1 : sP, abs(G(sel, 3))), 1);
-				G(sel, 6) = 1;
-				if(rand() < 0.5)
-					G(sel, 5) = -G(sel, 5);
-				end
-			end
-		elseif(res < pg + plm) % linearna modifikacija
-			G(sel, 1) = 1;
-			G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
-		else % encimska modifikacija
-			G(sel, 1) = 2;
-			G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
-			G(sel, 4) = 1;
-		end
+            if(rand() > 0.5) % drugi transkripcijski faktor
+                G(sel, 5) = randsample(setdiff(1 : sP, abs(G(sel, 3))), 1);
+                G(sel, 6) = 1;
+                if(rand() < 0.5)
+                    G(sel, 5) = -G(sel, 5);
+                end
+            end
+        elseif(res < pg + plm) % linearna modifikacija
+            G(sel, 1) = 1;
+            G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
+        else % encimska modifikacija
+            G(sel, 1) = 2;
+            G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
+            G(sel, 4) = 1;
+        end
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % spreminjanje regulatorjev %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	if(rand() <= preg)
+    if(rand() <= preg)
         sel = ceil(rand() * (sP - 1) + 1);
         if(G(sel, 1) == 0)
             res = rand();
@@ -144,24 +144,24 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
                     G(sel, 5) = randsample(setdiff(1 : sP, abs(G(sel, 3))), 1);
                     G(sel, 6) = 1;
                 end
-			elseif(res > 0.70 && (G(sel, 3) ~= 0 || G(sel, 5) ~= 0)) % brisanje regulatorja
-				if(rand() > 0.5 && G(sel, 3) ~= 0)
-					G(sel, 3) = 0;
-				else
-					G(sel, 5) = 0;
-				end
-			elseif(G(sel, 3) ~= 0) % spreminjanje vrste prvega regulatorja
-				G(sel, 3) = -G(sel, 3);
-			else % spreminjanje vrste drugega regulatorja
-				G(sel, 5) = -G(sel, 5);
-			end
+            elseif(res > 0.70 && (G(sel, 3) ~= 0 || G(sel, 5) ~= 0)) % brisanje regulatorja
+                if(rand() > 0.5 && G(sel, 3) ~= 0)
+                    G(sel, 3) = 0;
+                else
+                    G(sel, 5) = 0;
+                end
+            elseif(G(sel, 3) ~= 0) % spreminjanje vrste prvega regulatorja
+                G(sel, 3) = -G(sel, 3);
+            else % spreminjanje vrste drugega regulatorja
+                G(sel, 5) = -G(sel, 5);
+            end
 
-			if(rand() > 0.5 && G(sel, 3) ~= 0) % sprememba koncentracije
-				G(sel, 4) = G(sel, 4) * (rand() * 2);
-			elseif(G(sel, 5) ~= 0)
-				G(sel, 6) = G(sel, 6) * (rand() * 2);
-			end
-		end
+            if(rand() > 0.5 && G(sel, 3) ~= 0) % sprememba koncentracije
+                G(sel, 4) = G(sel, 4) * (rand() * 2);
+            elseif(G(sel, 5) ~= 0)
+                G(sel, 6) = G(sel, 6) * (rand() * 2);
+            end
+        end
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%

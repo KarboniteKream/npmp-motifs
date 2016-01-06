@@ -5,7 +5,7 @@ function find_model
     pop_size = 10;
     % stevilo ucnih signalov
     signal_number = 5;
-    
+
     % create initial population
     % creates cell array of empty matrices
     pop_array = cell(1, pop_size * 2); %cell array
@@ -19,15 +19,15 @@ function find_model
         M(:, 7) = 0; % spremeni tip degradacije na linearno alfa = 1
         pop_array{i} = M;
     end
-    
+
     % create learning examples
     S = zeros(signal_number,2);
     for i = 1:signal_number
         S(i,1) = randsample(1 : 100, 1); % predstavlja amplitudo
         S(i,2) = randsample(1 : 100, 1); % predstavlja perido
-    end    
+    end
     % TODO: Dodaj vhodni signal v osebke kot prvi protein.
-    
+
     % set other parameters (mutation probabilities)
     ppar = 0.5;
     pd = 0.4;
