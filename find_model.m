@@ -29,16 +29,16 @@ function find_model
     % TODO: Dodaj vhodni signal v osebke kot prvi protein.
 
     % set other parameters (mutation probabilities)
-    ppar = 0.5;
-    pd = 0.4;
-    pdeg = 0.2;
-    pgen = 0.15;
+    ppar = 0.75;
+    pd   = 0.40;
+    pdeg = 0.35;
+    pgen = 0.25;
     preg = 0.40;
-    po = 0.2;
-    pg = 0.7;
-    plm = 0.15;
-    dl = 0.6;
-    de = 0.2;
+    po   = 0.25;
+    pg   = 0.70;
+    plm  = 0.15;
+    dl   = 0.65;
+    de   = 0.20;
 
     % t = 0 : 0.01 : 9.99;
     t = [0, 10];
@@ -61,7 +61,7 @@ function find_model
                 % nastavi periodo in amplitudo
                 setGlobalAP(S(j, :)); % AP as amplitude and period
                 % initial protein values are zeros by default
-                [~, y] = ode15s(@model_complete, t, conc);
+                [~, y] = ode45(@model_complete, t, conc);
                 C(1, i) = C(1, i) + cost(y(:, 2)', S(j, 1)) + cost(y(:, 3)', S(j, 2));
             end
         end
