@@ -1,9 +1,9 @@
 % dP ... diferencial proteinov
 function dP = model_complete(t, P)
     G = getGlobalx;
-    %parameters
+    % parameters
     Par = getGlobalAP;
-    P(1) = Par(1)*sin((t*2*pi)/Par(2)); %assign number of first protein
+    P(1) = Par(1)*sin((t*2*pi)/Par(2)); % assign number of first protein
     
     % m ... stevilo genov v enacbi
     m = size(G, 1);
@@ -52,13 +52,14 @@ function dP = model_complete(t, P)
             dP(G(i, 3)) = dP(G(i, 3)) + G(i, 2) * (P(i) / (G(i, 4) + P(i)));
         end
 
-        % TODO: Vhodni protein se ne degradira? if i ~= 1
-        if G(i, 7) == 0 % linearna degradacija
-            dP(i) = dP(i) - G(i, 8) * P(i);
-        elseif G(i, 7) == 1 % encimska degradacija
-            dP(i) = dP(i) - G(i, 8) * P(i) / (G(i, 9) + P(i));
-        elseif G(i, 7) == 2 % aktivna degradacija
-            dP(i) = dP(i) - G(i, 8) * P(i) * P(G(i, 10));
+        if(i ~= 1)
+            if G(i, 7) == 0 % linearna degradacija
+                dP(i) = dP(i) - G(i, 8) * P(i);
+            elseif G(i, 7) == 1 % encimska degradacija
+                dP(i) = dP(i) - G(i, 8) * P(i) / (G(i, 9) + P(i));
+            elseif G(i, 7) == 2 % aktivna degradacija
+                dP(i) = dP(i) - G(i, 8) * P(i) * P(G(i, 10));
+            end
         end
     end
 

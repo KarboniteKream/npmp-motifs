@@ -13,18 +13,16 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
 	
     sP = size(G, 1); % stevilo proteinov
 
-    % Verjetno ne zelimo, da se tako veliko sprememb zgodi.
-    %       vpeljava verjetnosti za mutacije
-
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % sprememba obstojecega parametra %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if (rand() <= ppar)
-		sel = ceil(rand() * (sP - 1) + 1); % ne mutiramo prvega gena
-		params = [2, 4, 6, 8, 9];
-		idx = params(ceil(rand() * length(params)));
-		G(sel, idx) = G(sel, idx) * (rand() * 2);
+        sel = ceil(rand() * (sP - 1) + 1); % ne mutiramo prvega gena
+        params = [2, 4, 6, 8, 9];
+        idx = params(ceil(rand() * length(params)));
+        G(sel, idx) = G(sel, idx) * (rand() * 2);
 	end
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % dodajanje novega proteina %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,10 +53,10 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
             end
         elseif(res < pg + plm) % linearna modifikacija
             P(1) = 1;
-            P(3) = randsample(setdiff(1 : (sP + 1), sel), 1);
+            P(3) = randsample(1 : sP, 1);
         else % encimska modifikacija
             P(1) = 2;
-            P(3) = randsample(setdiff(1 : (sP + 1), sel), 1);
+            P(3) = randsample(1 : sP, 1);
             P(4) = 1;
         end
 
@@ -70,7 +68,7 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
             P(9) = 1;
         else % aktivna degradacija
             P(7) = 2;
-            P(10) = randsample(setdiff(1 : (sP + 1), sel), 1);
+            P(10) = randsample(1 : sP, 1);
         end
 
         G = [G; P];
@@ -79,7 +77,7 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % spreminjanje nacina degradacije %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	if (rand() <= pdeg)
+	if(rand() <= pdeg)
 		sel = ceil(rand() * (sP - 1) + 1);
 		G(sel, 8) = 1;
 
@@ -94,10 +92,10 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
 			G(sel, 10) = randsample(setdiff(1 : sP, sel), 1);
 		end
 	end
-		
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % spreminanje nacina generiranja proteina %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % spreminjanje nacina generiranja proteina %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if(rand() <= pgen)
 		sel = ceil(rand() * (sP - 1) + 1);
 		G(sel, 2) = 1;
@@ -129,22 +127,23 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
 			G(sel, 3) = randsample(setdiff(1 : sP, sel), 1);
 			G(sel, 4) = 1;
 		end
-	end
+    end
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % spreminjanje regulatorjev %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	if(rand() <= preg)
-		sel = ceil(rand() * (sP - 1) + 1);
-		if(G(sel, 1) == 0)
-			res = rand();
-			if(res <= 0.30 && (G(sel, 3) == 0 || G(sel, 5) == 0)) % dodajanje regulatorja
-				if(G(sel, 3) == 0)
-					G(sel, 3) = randsample(setdiff(1 : sP, abs(G(sel, 5))), 1);
-					G(sel, 4) = 1;
-				elseif(G(sel, 5) == 0)
-					G(sel, 5) = randsample(setdiff(1 : sP, abs(G(sel, 3))), 1);
-					G(sel, 6) = 1;
-				end
+        sel = ceil(rand() * (sP - 1) + 1);
+        if(G(sel, 1) == 0)
+            res = rand();
+            if(res <= 0.30 && (G(sel, 3) == 0 || G(sel, 5) == 0)) % dodajanje regulatorja
+                if(G(sel, 3) == 0)
+                    G(sel, 3) = randsample(setdiff(1 : sP, abs(G(sel, 5))), 1);
+                    G(sel, 4) = 1;
+                elseif(G(sel, 5) == 0)
+                    G(sel, 5) = randsample(setdiff(1 : sP, abs(G(sel, 3))), 1);
+                    G(sel, 6) = 1;
+                end
 			elseif(res > 0.70 && (G(sel, 3) ~= 0 || G(sel, 5) ~= 0)) % brisanje regulatorja
 				if(rand() > 0.5 && G(sel, 3) ~= 0)
 					G(sel, 3) = 0;
@@ -158,12 +157,13 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
 			end
 
 			if(rand() > 0.5 && G(sel, 3) ~= 0) % sprememba koncentracije
-				G(sel, 3) = G(sel, 3) * (rand() * 2);
+				G(sel, 4) = G(sel, 4) * (rand() * 2);
 			elseif(G(sel, 5) ~= 0)
-				G(sel, 5) = G(sel, 5) * (rand() * 2);
+				G(sel, 6) = G(sel, 6) * (rand() * 2);
 			end
 		end
-	end
+    end
+
     %%%%%%%%%%%%%%%%%%%%%%%%
     % odstranitev proteina %
     %%%%%%%%%%%%%%%%%%%%%%%%
@@ -173,28 +173,58 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
         for i = setdiff(1 : sP, sel)
             if(G(i, 1) == 0)
                 if(abs(G(i, 3)) == sel)
-                    G(sel, 3) = randsample(setdiff(1 : sP, [sel, abs(G(i, 5))]), 1);
+                    G(sel, 3) = randsample(setdiff(1 : (sP - 1), abs(G(i, 5))), 1);
                     if(G(i,1) == 0 && rand() > 0.5)
                         G(sel, 3) = -G(sel, 3);
                     end
                 end
 
                 if(abs(G(i, 5)) == sel)
-                    G(sel, 5) = randsample(setdiff(1 : sP, [sel, abs(G(i, 3))]), 1);
+                    G(sel, 5) = randsample(setdiff(1 : (sP - 1), abs(G(i, 3))), 1);
                     if(rand() > 0.5)
-                        G(sel, 5) = -G(sel,5);
+                        G(sel, 5) = -G(sel, 5);
                     end
                 end
             else
-                G(sel, 3) = randsample(setdiff(1 : sP, [sel, i]), 1);
+                G(sel, 3) = randsample(setdiff(1 : (sP - 1), i), 1);
             end
 
             if(abs(G(i, 10)) == sel)
-                G(sel, 10) = randsample(setdiff(1 : sP, [sel, i]), 1);
+                G(sel, 10) = randsample(setdiff(1 : (sP - 1), i), 1);
             end
         end
 
-        [G, ~] = removerows(G, 'ind', sel);
+        for i = 1 : sP
+            if(G(i, 3) > 0)
+                if(G(i, 3) >= sel)
+                    G(i, 3) = G(i, 3) - 1;
+                end
+            elseif(G(i, 3) < 0)
+                if(abs(G(i, 3)) >= sel)
+                    G(i, 3) = G(i, 3) + 1;
+                end
+            end
+            if(G(i, 5) > 0)
+                if(G(i, 5) >= sel)
+                    G(i, 5) = G(i, 5) - 1;
+                end
+            elseif(G(i, 5) < 0)
+                if(abs(G(i, 5)) >= sel)
+                    G(i, 5) = G(i, 5) + 1;
+                end
+            end
+            if(G(i, 10) > 0)
+                if(G(i, 10) >= sel)
+                    G(i, 10) = G(i, 10) - 1;
+                end
+            elseif(G(i, 10) < 0)
+                if(abs(G(i, 10)) >= sel)
+                    G(i, 10) = G(i, 10) + 1;
+                end
+            end
+        end
+
+        G(sel, :) = [];
     end
 
     NG = G;
