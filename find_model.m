@@ -12,7 +12,7 @@ function find_model
     % protein concentrations
     for i = 1 : pop_size
         % zacetno stevilo proteinov
-        M = ones(3,10);
+        M = ones(3, 10);
         M(:, 1) = 0; % spremeni tip izrazanja na gensko izrazanje
         M(:, 5) = 0;
         M(:, 6) = 0;
@@ -34,17 +34,18 @@ function find_model
     pdeg = 0.2;
     pgen = 0.15;
     preg = 0.40;
-    po = 0;
+    po = 0.2;
     pg = 0.7;
     plm = 0.15;
     dl = 0.6;
     de = 0.2;
 
-    t = 0 : 0.01 : 9.99;
+    % t = 0 : 0.01 : 9.99;
     t = [0, 10];
 
     % glavna zanka
     for iter = 1 : max_iterations
+        fprintf('iter=%02d', iter);
         % cost posameznih osebkov se ponastavi pri vsaki iteraciji
         C = zeros(1, pop_size * 2);
         % mutacija - dodamo 20 novih osebkov
@@ -71,7 +72,7 @@ function find_model
             pop_array{i} = pop_array{sort_idx(i)};
         end
 
-        min(C)
+        fprintf(', cost=%d\n', min(C));
     end
 
     % select best motif

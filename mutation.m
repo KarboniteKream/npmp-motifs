@@ -169,62 +169,32 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
     %%%%%%%%%%%%%%%%%%%%%%%%
     if(sP > 3 && rand() < po)
         sel = ceil(rand() * (sP - 1) + 1);
+        G(sel, :) = [];
+        sP = sP - 1;
 
-        for i = setdiff(1 : sP, sel)
+        for i = 1 : sP
             if(G(i, 1) == 0)
                 if(abs(G(i, 3)) == sel)
-                    G(sel, 3) = randsample(setdiff(1 : (sP - 1), abs(G(i, 5))), 1);
-                    if(G(i,1) == 0 && rand() > 0.5)
-                        G(sel, 3) = -G(sel, 3);
+                    G(i, 3) = randsample(setdiff(1 : sP, abs(G(i, 5))), 1);
+                    if(G(i, 1) == 0 && rand() > 0.5)
+                        G(i, 3) = -G(i, 3);
                     end
                 end
 
                 if(abs(G(i, 5)) == sel)
-                    G(sel, 5) = randsample(setdiff(1 : (sP - 1), abs(G(i, 3))), 1);
+                    G(i, 5) = randsample(setdiff(1 : sP, abs(G(i, 3))), 1);
                     if(rand() > 0.5)
-                        G(sel, 5) = -G(sel, 5);
+                        G(i, 5) = -G(i, 5);
                     end
                 end
-            else
-                G(sel, 3) = randsample(setdiff(1 : (sP - 1), i), 1);
+            elseif(G(i, 3) == sel)
+                G(i, 3) = randsample(setdiff(1 : sP, i), 1);
             end
 
             if(abs(G(i, 10)) == sel)
-                G(sel, 10) = randsample(setdiff(1 : (sP - 1), i), 1);
+                G(i, 10) = randsample(setdiff(1 : sP, i), 1);
             end
         end
-
-        for i = 1 : sP
-            if(G(i, 3) > 0)
-                if(G(i, 3) >= sel)
-                    G(i, 3) = G(i, 3) - 1;
-                end
-            elseif(G(i, 3) < 0)
-                if(abs(G(i, 3)) >= sel)
-                    G(i, 3) = G(i, 3) + 1;
-                end
-            end
-            if(G(i, 5) > 0)
-                if(G(i, 5) >= sel)
-                    G(i, 5) = G(i, 5) - 1;
-                end
-            elseif(G(i, 5) < 0)
-                if(abs(G(i, 5)) >= sel)
-                    G(i, 5) = G(i, 5) + 1;
-                end
-            end
-            if(G(i, 10) > 0)
-                if(G(i, 10) >= sel)
-                    G(i, 10) = G(i, 10) - 1;
-                end
-            elseif(G(i, 10) < 0)
-                if(abs(G(i, 10)) >= sel)
-                    G(i, 10) = G(i, 10) + 1;
-                end
-            end
-        end
-
-        G(sel, :) = [];
     end
 
     NG = G;
