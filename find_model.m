@@ -63,6 +63,7 @@ function find_model
                 % nastavi periodo in amplitudo
                 setGlobalAP(S(j, :)); % AP as amplitude and period
                 % initial protein values are zeros by default
+                conc(1) = S(j,1);
                 [~, y] = ode45(@model_complete, t, conc);
                 C(1, i) = C(1, i) + cost(y(:, 2)', S(j, 1)) + cost(y(:, 3)', S(j, 2));
             end
@@ -81,8 +82,10 @@ function find_model
     pop_array{1}
     setGlobalx(pop_array{1});
     setGlobalAP(S(1, :));
+    conc = zeros(1, size(pop_array{1}, 1));
+    conc(1) = S(1,1);
     [T, y] = ode45(@model_complete, t, conc);
-    S(1, 1)
-    S(1, 2)
+    S(1, 1) %amplituda
+    S(1, 2) %perioda
     plot(T,y);
 end

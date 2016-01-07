@@ -4,7 +4,7 @@ function dP = model_complete(t, P)
     
     % parameters
     Par = getGlobalAP;
-    P(1) = Par(1)*sin((t*2*pi)/Par(2)); % assign number of first protein
+    %P(1) = Par(1)*sin((t*2*pi)/Par(2)) + Par(1); % assign number of first protein
 
     % m ... stevilo genov v enacbi
     m = size(G, 1);
