@@ -20,7 +20,7 @@ function NG = mutation(G, ppar, pd, pdeg, pgen, preg, po, pg, plm, dl, de)
         sel = ceil(rand() * (sP - 1) + 1); % ne mutiramo prvega gena
         params = [2, 4, 6, 8, 9];
         idx = params(ceil(rand() * length(params)));
-        G(sel, idx) = G(sel, idx) * (rand() * 2);
+        G(sel, idx) = G(sel, idx) * (rand() * 2) + rand();
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
