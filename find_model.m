@@ -21,26 +21,24 @@ function find_model
     end
 
     % create learning examples
-    S = zeros(signal_number,2);
-    for i = 1:signal_number
-        S(i,1) = randsample(1 : 5, 1); % predstavlja amplitudo
-        S(i,2) = randsample(1 : 5, 1); % predstavlja perido
+    S = zeros(signal_number, 2);
+    for i = 1 : signal_number
+        S(i, 1) = randsample(1 : 5, 1); % predstavlja amplitudo
+        S(i, 2) = randsample(1 : 5, 1); % predstavlja perido
     end
-    % TODO: Dodaj vhodni signal v osebke kot prvi protein.
 
     % set other parameters (mutation probabilities)
-    ppar = 0.85;   % ppar ... verjetnost spremembe parametrov
-    pd   = 0.40;   % pd   ... verjetnost dodajanja proteina
-    pdeg = 0.35;   % pdeg ... verjetnost spremembe degradacije  
+    ppar = 0.85; % ppar ... verjetnost spremembe parametrov
+    pd   = 0.40; % pd   ... verjetnost dodajanja proteina
+    pdeg = 0.35; % pdeg ... verjetnost spremembe degradacije
     pgen = 0.25; % pgen ... verjetnost spremembe generiranja proteina
-    preg = 0.40;  % preg ... verjetnost spremembe regulatorjev
+    preg = 0.40; % preg ... verjetnost spremembe regulatorjev
     po   = 0.35; % po   ... verjetnost odstranitve proteina
     pg   = 0.50; % pg   ... verjetnost genskega izrazanja
     plm  = 0.25; % plm  ... verjetnost linearne modifikacije
-    dl   = 0.40;  % dl   ... verjetnost linearne degradacije
-    de   = 0.35;  % de   ... verjetnost encimske degradacije
+    dl   = 0.40; % dl   ... verjetnost linearne degradacije
+    de   = 0.35; % de   ... verjetnost encimske degradacije
 
-    % t = 0 : 0.01 : 9.99;
     t = [0, 10];
 
     % glavna zanka
@@ -61,7 +59,7 @@ function find_model
                 % nastavi periodo in amplitudo
                 setGlobalAP(S(j, :)); % AP as amplitude and period
                 % initial protein values are zeros by default
-                conc(1) = S(j,1);
+                conc(1) = S(j, 1);
                 [~, y] = ode45(@model_complete, t, conc);
                 C(1, i) = C(1, i) + cost(y(:, 2), S(j, 1)) + cost(y(:, 3), S(j, 2));
             end
@@ -82,7 +80,7 @@ function find_model
     setGlobalx(pop_array{1});
     setGlobalAP(S(1, :));
     conc = zeros(1, size(pop_array{1}, 1));
-    conc(1) = S(1,1);
+    conc(1) = S(1, 1);
     [T, y] = ode45(@model_complete, t, conc);
     plot(T, y);
 end

@@ -2,10 +2,6 @@
 function dP = model_complete(t, P)
     G = getGlobalx;
     
-    % parameters
-    Par = getGlobalAP;
-    %P(1) = Par(1)*sin((t*2*pi)/Par(2)) + Par(1); % assign number of first protein
-
     % m ... stevilo genov v enacbi
     m = size(G, 1);
     dP = zeros(1, size(P, 1));
@@ -63,6 +59,8 @@ function dP = model_complete(t, P)
             end
         end
     end
-    dP(1) = Par(1)*((2*pi)/Par(2))*cos((t*2*pi)/Par(2));
+
+    Par = getGlobalAP;
+    dP(1) = Par(1) * ((2 * pi) / Par(2)) * cos((2 * t * pi) / Par(2));
     dP = dP';
 end
