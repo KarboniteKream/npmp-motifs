@@ -1,6 +1,6 @@
 function find_model
     % number of iterations
-    max_iterations = 50;
+    max_iterations = 100;
     % population size
     pop_size = 10;
     % stevilo ucnih signalov
@@ -39,9 +39,7 @@ function find_model
     plm  = 0.25; % plm  ... verjetnost linearne modifikacije
     dl   = 0.40;  % dl   ... verjetnost linearne degradacije
     de   = 0.35;  % de   ... verjetnost encimske degradacije
-      
-    
-    
+
     % t = 0 : 0.01 : 9.99;
     t = [0, 10];
 
@@ -65,7 +63,7 @@ function find_model
                 % initial protein values are zeros by default
                 conc(1) = S(j,1);
                 [~, y] = ode45(@model_complete, t, conc);
-                C(1, i) = C(1, i) + cost(y(:, 2)', S(j, 1)) + cost(y(:, 3)', S(j, 2));
+                C(1, i) = C(1, i) + cost(y(:, 2), S(j, 1)) + cost(y(:, 3), S(j, 2));
             end
         end
 
@@ -75,17 +73,16 @@ function find_model
             pop_array{i} = pop_array{sort_idx(i)};
         end
 
-        fprintf(', cost=%d\n', min(C));
+        fprintf(', cost=%d\n', round(min(C)));
     end
 
     % select best motif
+    fprintf('\namplituda=%d, perioda=%d\n', S(1, 1), S(1, 2));
     pop_array{1}
     setGlobalx(pop_array{1});
     setGlobalAP(S(1, :));
     conc = zeros(1, size(pop_array{1}, 1));
     conc(1) = S(1,1);
     [T, y] = ode45(@model_complete, t, conc);
-    S(1, 1) %amplituda
-    S(1, 2) %perioda
-    plot(T,y);
+    plot(T, y);
 end
