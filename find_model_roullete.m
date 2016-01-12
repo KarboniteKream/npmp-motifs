@@ -108,8 +108,8 @@ function find_model_roullete
         setGlobalAP(S(i, :));
         conc(1) = S(i,1);
         [T, y] = ode45(@model_complete, t, conc);
-        plot(T, y(:,[1,3]));
-        legend('sinus', 'perioda', 'Location', 'northwest');
+        plot(T, y(:,[1,2,3]));
+        legend('sinus', 'amplituda', 'perioda', 'Location', 'northwest');
     end
     S
 end
