@@ -24,9 +24,8 @@ function find_model_roullete
     S = zeros(signal_number,2);
     for i = 1:signal_number
         S(i,1) = randsample(1 : 5, 1); % predstavlja amplitudo
-        S(i,2) = randsample(1 : 4, 1); % predstavlja perido
+        S(i,2) = randsample(1 : 4, 1); % predstavlja periodo
     end
-    % TODO: Dodaj vhodni signal v osebke kot prvi protein.
 
     % set other parameters (mutation probabilities)
     ppar = 0.85;   % ppar ... verjetnost spremembe parametrov
@@ -63,7 +62,7 @@ function find_model_roullete
                 % initial protein values are zeros by default
                 conc(1) = S(j,1);
                 [~, y] = ode45(@model_complete, t, conc);
-                C(1, i) = C(1, i) + cost(y(:, 3), S(j, 2)); % + cost(y(:, 2), S(j, 1));
+                C(1, i) = C(1, i) + cost(y(:, 2), y(:, 3), S(j, :));
             end
         end
 

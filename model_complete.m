@@ -60,7 +60,7 @@ function dP = model_complete(t, P)
         end
     end
 
-    Par = getGlobalAP;
+    Par = getGlobalAP();
     dP(1) = Par(1) * ((2 * pi) / Par(2)) * cos((2 * t * pi) / Par(2));
     dP = dP';
 end
