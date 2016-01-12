@@ -83,4 +83,6 @@ function find_model
     conc(1) = S(1, 1);
     [T, y] = ode45(@model_complete, t, conc);
     plot(T, y);
+    legend('sinus', 'amplituda', 'perioda', 'Location', 'northwest');
+    S
 end
